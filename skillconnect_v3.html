@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="SkillConnect – ISO-aligned local skill and service exchange platform. EULA-governed, CPID-assigned, WCAG 2.1 accessible."/>
+<meta name="robots" content="index, follow"/>
+<meta property="og:title" content="SkillConnect – Local Skill & Service Exchange"/>
+<meta property="og:description" content="Find and share local skills. Free, fast, community-driven. ISO 27001 aligned."/>
+<meta name="theme-color" content="#e8611a"/>
+<title>SkillConnect – Local Skill &amp; Service Exchange</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════ VARIABLES ═══════════════════════ */
+:root{
+  --cream:#faf6ef;--warm:#f5ede0;--orange:#e8611a;--orange-light:#f4874b;--orange-dark:#c24e10;
+  --green:#3a7c5c;--green-light:#e8f5ee;--dark:#1c1a17;--mid:#5a5449;--light:#9e9488;
+  --card-bg:#fffcf7;--border:#e8dfd0;--blue:#1e4fad;--legal-bg:#f0f4ff;--legal-border:#c5d2f0;
+  --red:#dc2626;--nav-h:68px;
+}
+[data-theme="dark"]{
+  --cream:#161310;--warm:#1e1b16;--card-bg:#242018;--dark:#f0ebe2;--mid:#b8ad9e;
+  --light:#7a7063;--border:#3a342a;--card-bg:#1e1b16;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);overflow-x:hidden;}
+
+/* ═══════════════════════ PAGE SYSTEM ═══════════════════════ */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* ═══════════════════════ COOKIE BANNER ═══════════════════════ */
+#cookieBanner{
+  position:fixed;bottom:0;left:0;right:0;z-index:9999;
+  background:var(--dark);color:white;
+  padding:14px 5%;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-size:0.8rem;line-height:1.6;
+  transform:translateY(100%);transition:transform 0.4s ease;
+}
+#cookieBanner.show{transform:translateY(0);}
+#cookieBanner p{max-width:700px;}
+#cookieBanner a{color:var(--orange-light);text-decoration:underline;cursor:pointer;}
+.cookie-btns{display:flex;gap:8px;flex-shrink:0;}
+.cbtn-yes{background:var(--orange);color:white;border:none;padding:8px 18px;border-radius:50px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.cbtn-no{background:transparent;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.2);padding:8px 18px;border-radius:50px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.cbtn-settings{background:transparent;color:rgba(255,255,255,0.5);border:none;font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;}
+
+/* ═══════════════════════ TOAST ═══════════════════════ */
+#toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--dark);color:white;padding:11px 22px;border-radius:50px;
+  font-size:0.83rem;font-weight:500;z-index:8000;
+  opacity:0;pointer-events:none;transition:all 0.3s;white-space:nowrap;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ═══════════════════════ NAVBAR ═══════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  background:rgba(250,246,239,0.95);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:0 5%;display:flex;align-items:center;justify-content:space-between;
+  height:var(--nav-h);
+}
+[data-theme="dark"] nav{background:rgba(22,19,16,0.95);}
+.nav-logo{font-family:'Fraunces',serif;font-size:1.45rem;font-weight:900;color:var(--dark);text-decoration:none;display:flex;align-items:center;gap:7px;cursor:pointer;}
+.nav-logo span{color:var(--orange);}
+.logo-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;display:inline-block;}
+.nav-links{display:flex;align-items:center;gap:24px;}
+.nav-links a{text-decoration:none;color:var(--mid);font-size:0.87rem;font-weight:500;transition:color 0.2s;cursor:pointer;}
+.nav-links a:hover,.nav-links a.active{color:var(--orange);}
+.nav-cta{background:var(--orange)!important;color:white!important;padding:8px 18px;border-radius:50px;font-weight:600!important;}
+.nav-cta:hover{background:var(--orange-dark)!important;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.icon-btn{background:none;border:1.5px solid var(--border);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;color:var(--mid);}
+.icon-btn:hover{border-color:var(--orange);background:var(--warm);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;}
+.hamburger span{width:22px;height:2px;background:var(--dark);border-radius:2px;transition:all 0.3s;display:block;}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--cream);border-bottom:1px solid var(--border);padding:16px 5%;z-index:490;flex-direction:column;gap:4px;box-shadow:0 8px 24px rgba(0,0,0,0.08);}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{text-decoration:none;color:var(--mid);font-size:0.92rem;font-weight:500;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.mobile-menu a:last-child{border-bottom:none;}
+
+/* ═══════════════════════ COMPLIANCE BAR ═══════════════════════ */
+.compliance-bar{
+  background:var(--legal-bg);border-bottom:1px solid var(--legal-border);
+  padding:8px 5%;display:flex;align-items:center;justify-content:center;
+  gap:20px;flex-wrap:wrap;margin-top:var(--nav-h);
+}
+.comp-item{display:flex;align-items:center;gap:5px;font-size:0.7rem;font-weight:700;color:var(--blue);letter-spacing:0.04em;white-space:nowrap;}
+.comp-item .cd{width:5px;height:5px;background:var(--blue);border-radius:50%;opacity:0.6;}
+
+/* ═══════════════════════ SECTION COMMONS ═══════════════════════ */
+.section{padding:72px 5%;}
+.section-label{font-size:0.76rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);margin-bottom:10px;}
+.section-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;line-height:1.15;margin-bottom:14px;}
+.section-sub{color:var(--mid);font-size:0.98rem;max-width:520px;line-height:1.7;}
+.section-head{margin-bottom:44px;}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ═══════════════════════ BUTTONS ═══════════════════════ */
+.btn-primary{background:var(--orange);color:white;padding:13px 26px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.93rem;transition:all 0.2s;box-shadow:0 4px 20px rgba(232,97,26,0.3);display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.btn-primary:hover{background:var(--orange-dark);transform:translateY(-2px);}
+.btn-secondary{background:transparent;color:var(--dark);padding:13px 26px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.93rem;border:2px solid var(--border);transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.btn-secondary:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px);}
+.btn-outline-white{background:transparent;color:white;padding:11px 24px;border-radius:50px;font-weight:600;font-size:0.88rem;border:2px solid rgba(255,255,255,0.3);transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;}
+.btn-outline-white:hover{border-color:white;background:rgba(255,255,255,0.08);}
+
+/* ═══════════════════════ HERO ═══════════════════════ */
+.hero{min-height:92vh;padding:60px 5% 72px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;overflow:hidden;}
+.hero-bg-circle{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(232,97,26,0.12) 0%,transparent 70%);top:-100px;right:-100px;border-radius:50%;pointer-events:none;}
+.hero-bg-circle2{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(58,124,92,0.08) 0%,transparent 70%);bottom:0;left:10%;border-radius:50%;pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green-light);color:var(--green);padding:6px 14px;border-radius:50px;font-size:0.78rem;font-weight:600;margin-bottom:20px;animation:fadeUp 0.6s ease both;}
+.hero-badge::before{content:'';width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(2.8rem,5vw,4.2rem);font-weight:900;line-height:1.08;margin-bottom:22px;animation:fadeUp 0.6s 0.1s ease both;}
+.hero h1 em{font-style:italic;color:var(--orange);font-weight:400;}
+.hero>div>p{font-size:1.02rem;color:var(--mid);line-height:1.7;max-width:460px;margin-bottom:32px;animation:fadeUp 0.6s 0.2s ease both;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;animation:fadeUp 0.6s 0.3s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero-visual{animation:fadeUp 0.6s 0.4s ease both;}
+.hero-card{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:20px 24px;box-shadow:0 8px 32px rgba(28,26,23,0.08);margin-bottom:16px;transition:transform 0.3s;}
+.hero-card:hover{transform:translateX(6px);}
+.hero-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+.hero-card-name{font-weight:600;font-size:0.9rem;}
+.hero-card-loc{font-size:0.77rem;color:var(--light);}
+.hero-card-tag{display:inline-block;background:var(--warm);color:var(--orange);padding:4px 10px;border-radius:20px;font-size:0.74rem;font-weight:600;}
+.hero-card-desc{font-size:0.82rem;color:var(--mid);margin-top:8px;line-height:1.5;}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
+.stat-box{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;}
+.stat-num{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:900;color:var(--orange);}
+.stat-lbl{font-size:0.7rem;color:var(--light);margin-top:2px;}
+
+/* ═══════════════════════ CATEGORIES ═══════════════════════ */
+.categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;}
+.cat-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:18px;padding:22px 14px;text-align:center;cursor:pointer;transition:all 0.25s;text-decoration:none;color:var(--dark);display:block;}
+.cat-card:hover{border-color:var(--orange);background:var(--warm);transform:translateY(-4px);box-shadow:0 8px 24px rgba(232,97,26,0.15);}
+.cat-icon{font-size:1.9rem;margin-bottom:10px;}
+.cat-name{font-weight:600;font-size:0.86rem;}
+.cat-count{font-size:0.73rem;color:var(--light);margin-top:4px;}
+
+/* ═══════════════════════ LISTINGS ═══════════════════════ */
+.listings-bg{background:var(--warm);}
+.search-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:stretch;}
+.search-bar{display:flex;gap:10px;background:white;border:1.5px solid var(--border);border-radius:50px;padding:8px 8px 8px 18px;flex:1;min-width:240px;box-shadow:0 4px 20px rgba(0,0,0,0.06);}
+.search-bar input{flex:1;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:0.93rem;background:transparent;color:var(--dark);}
+.search-bar input::placeholder{color:var(--light);}
+.search-btn{background:var(--orange);color:white;border:none;border-radius:50px;padding:9px 22px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.86rem;cursor:pointer;transition:background 0.2s;}
+.search-btn:hover{background:var(--orange-dark);}
+.price-filter{background:white;border:1.5px solid var(--border);border-radius:50px;padding:8px 34px 8px 16px;font-family:'DM Sans',sans-serif;font-size:0.84rem;color:var(--dark);cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239e9488' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.filter-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+.chip{padding:6px 15px;border-radius:50px;border:1.5px solid var(--border);background:white;color:var(--mid);font-size:0.8rem;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.chip:hover,.chip.active{background:var(--orange);color:white;border-color:var(--orange);}
+.results-count{font-size:0.8rem;color:var(--light);margin-bottom:18px;}
+.no-results{text-align:center;padding:48px 20px;color:var(--mid);display:none;}
+.no-results .no-icon{font-size:2.8rem;margin-bottom:14px;}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;}
+.service-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:20px;padding:22px;transition:all 0.25s;cursor:pointer;opacity:0;transform:translateY(20px);position:relative;}
+.service-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.4s ease,transform 0.4s ease,box-shadow 0.25s,border-color 0.25s;}
+.service-card:hover{box-shadow:0 12px 36px rgba(28,26,23,0.1);border-color:var(--orange-light);transform:translateY(-4px);}
+.card-cpid{position:absolute;top:11px;right:13px;font-size:0.6rem;font-weight:700;color:var(--light);letter-spacing:0.06em;font-family:monospace;}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.card-avatar{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.card-badge{font-size:0.7rem;font-weight:700;padding:4px 9px;border-radius:20px;}
+.badge-orange{background:rgba(232,97,26,0.1);color:var(--orange);}
+.badge-green{background:rgba(58,124,92,0.1);color:var(--green);}
+.badge-blue{background:rgba(59,130,246,0.1);color:#2563eb;}
+.badge-purple{background:rgba(139,92,246,0.1);color:#7c3aed;}
+.card-title{font-family:'Fraunces',serif;font-size:1.08rem;font-weight:700;margin-bottom:4px;}
+.card-provider{font-size:0.8rem;color:var(--mid);margin-bottom:4px;}
+.card-rating{display:flex;align-items:center;gap:4px;margin-bottom:8px;}
+.stars-s{color:var(--orange);font-size:0.7rem;}
+.rating-v{font-size:0.73rem;font-weight:600;color:var(--mid);}
+.card-desc{font-size:0.83rem;color:var(--mid);line-height:1.6;margin-bottom:12px;}
+.card-pla-tag{display:flex;align-items:center;gap:5px;font-size:0.69rem;color:var(--green);font-weight:600;margin-bottom:10px;}
+.card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border);}
+.card-loc{font-size:0.76rem;color:var(--light);}
+.card-price{font-size:0.78rem;color:var(--green);font-weight:700;}
+.card-contact{background:var(--dark);color:white;border:none;border-radius:50px;padding:7px 14px;font-size:0.78rem;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:background 0.2s;}
+.card-contact:hover{background:var(--orange);}
+
+/* ═══════════════════════ HOW IT WORKS ═══════════════════════ */
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;}
+.step{text-align:center;padding:30px 18px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--border);transition:transform 0.3s;}
+.step:hover{transform:translateY(-6px);}
+.step-num{width:46px;height:46px;background:var(--orange);color:white;border-radius:13px;font-family:'Fraunces',serif;font-size:1.25rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.step h3{font-family:'Fraunces',serif;font-size:1.05rem;margin-bottom:9px;}
+.step p{font-size:0.83rem;color:var(--mid);line-height:1.6;}
+
+/* ═══════════════════════ TESTIMONIALS ═══════════════════════ */
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;}
+.testi-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:20px;padding:26px;}
+.stars{color:var(--orange);font-size:0.88rem;margin-bottom:12px;}
+.testi-text{font-size:0.86rem;color:var(--mid);line-height:1.7;margin-bottom:16px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:12px;}
+.testi-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.88rem;}
+.testi-name{font-weight:600;font-size:0.83rem;}
+.testi-role{font-size:0.73rem;color:var(--light);}
+
+/* ═══════════════════════ FORM SECTION ═══════════════════════ */
+.form-section{background:var(--dark);color:white;}
+.form-section .section-title{color:white;}
+.form-section .section-sub{color:#9e9488;}
+.form-section .section-label{color:var(--orange-light);}
+.form-wrap{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:36px;max-width:660px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.7);}
+.form-group input,.form-group select,.form-group textarea{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:11px;padding:11px 14px;color:white;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--orange);}
+.form-group input.err,.form-group select.err,.form-group textarea.err{border-color:#f87171;}
+.err-msg{font-size:0.7rem;color:#f87171;display:none;}
+.form-group input.err~.err-msg,.form-group select.err~.err-msg,.form-group textarea.err~.err-msg{display:block;}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,0.3);}
+.form-group select option{background:var(--dark);}
+.form-group textarea{resize:vertical;min-height:90px;}
+.form-pla-row{display:flex;align-items:flex-start;gap:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 14px;margin-top:4px;}
+.form-pla-row input[type="checkbox"]{margin-top:3px;accent-color:var(--orange);flex-shrink:0;}
+.form-pla-row label{font-size:0.76rem;color:rgba(255,255,255,0.6);line-height:1.6;}
+.form-pla-row label a{color:var(--orange-light);text-decoration:underline;cursor:pointer;}
+.form-submit{width:100%;background:var(--orange);color:white;border:none;border-radius:50px;padding:14px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:6px;opacity:0.45;pointer-events:none;}
+.form-submit.ready{opacity:1;pointer-events:all;}
+.form-submit.ready:hover{background:var(--orange-light);transform:translateY(-2px);}
+.form-success{display:none;text-align:center;padding:36px;color:white;}
+.form-success .tick{width:60px;height:60px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin:0 auto 14px;}
+.form-success h3{font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:8px;}
+.form-success p{color:rgba(255,255,255,0.6);font-size:0.86rem;}
+.cpid-box{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:11px 18px;margin:14px 0;font-size:0.8rem;color:rgba(255,255,255,0.8);font-family:monospace;}
+.btn-again{display:inline-block;margin-top:14px;background:transparent;color:var(--orange-light);border:1.5px solid var(--orange-light);padding:9px 22px;border-radius:50px;font-size:0.86rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.btn-again:hover{background:var(--orange);color:white;border-color:var(--orange);}
+
+/* ═══════════════════════ ABOUT PAGE ═══════════════════════ */
+.about-hero{background:linear-gradient(135deg,var(--dark) 0%,#2a2420 100%);color:white;padding:80px 5% 72px;text-align:center;}
+.about-hero .section-label{color:var(--orange-light);}
+.about-hero h1{font-family:'Fraunces',serif;font-size:clamp(2.4rem,4vw,3.6rem);font-weight:900;color:white;line-height:1.1;margin-bottom:18px;}
+.about-hero p{color:rgba(255,255,255,0.7);font-size:1rem;line-height:1.7;max-width:560px;margin:0 auto;}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;}
+.team-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:20px;padding:28px 22px;text-align:center;transition:transform 0.3s;}
+.team-card:hover{transform:translateY(-5px);}
+.team-av{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;margin:0 auto 14px;}
+.team-name{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;margin-bottom:4px;}
+.team-role{font-size:0.78rem;color:var(--orange);font-weight:600;margin-bottom:8px;}
+.team-bio{font-size:0.78rem;color:var(--mid);line-height:1.6;}
+.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.mission-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:18px;padding:26px;}
+.mission-icon{font-size:1.8rem;margin-bottom:12px;}
+.mission-card h4{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;margin-bottom:8px;}
+.mission-card p{font-size:0.8rem;color:var(--mid);line-height:1.6;}
+.about-banner{background:var(--orange);color:white;padding:60px 5%;text-align:center;border-radius:0;}
+.about-banner h2{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;margin-bottom:12px;}
+.about-banner p{font-size:0.95rem;opacity:0.85;max-width:500px;margin:0 auto 24px;line-height:1.7;}
+
+/* ═══════════════════════ FAQ PAGE ═══════════════════════ */
+.faq-hero{background:var(--warm);padding:72px 5% 56px;text-align:center;}
+.faq-search{display:flex;background:white;border:1.5px solid var(--border);border-radius:50px;padding:8px 8px 8px 20px;max-width:500px;margin:24px auto 0;box-shadow:0 4px 20px rgba(0,0,0,0.06);}
+.faq-search input{flex:1;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:0.93rem;color:var(--dark);background:transparent;}
+.faq-search input::placeholder{color:var(--light);}
+.faq-cats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:32px;}
+.faq-items{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px;}
+.faq-item{background:var(--card-bg);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;cursor:pointer;font-weight:600;font-size:0.92rem;transition:background 0.2s;gap:12px;}
+.faq-q:hover{background:var(--warm);}
+.faq-q.open{background:var(--warm);color:var(--orange);}
+.faq-arrow{font-size:0.8rem;transition:transform 0.3s;flex-shrink:0;}
+.faq-q.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.35s ease,padding 0.3s ease;font-size:0.85rem;color:var(--mid);line-height:1.7;padding:0 22px;}
+.faq-a.open{max-height:400px;padding:0 22px 18px;}
+.faq-tag{display:inline-block;background:var(--legal-bg);color:var(--blue);padding:2px 8px;border-radius:6px;font-size:0.68rem;font-weight:700;margin-left:8px;flex-shrink:0;}
+
+/* ═══════════════════════ CONTACT PAGE ═══════════════════════ */
+.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:start;}
+.contact-info-cards{display:flex;flex-direction:column;gap:14px;margin-top:24px;}
+.contact-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;}
+.contact-card-icon{width:42px;height:42px;background:var(--warm);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.contact-card h4{font-weight:700;font-size:0.88rem;margin-bottom:4px;}
+.contact-card p{font-size:0.8rem;color:var(--mid);line-height:1.6;}
+.contact-form-wrap{background:var(--card-bg);border:1.5px solid var(--border);border-radius:22px;padding:32px;}
+.contact-form-wrap h3{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+.contact-form-wrap>p{font-size:0.82rem;color:var(--mid);margin-bottom:24px;}
+.cf-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.cf-group label{font-size:0.8rem;font-weight:600;color:var(--mid);}
+.cf-group input,.cf-group select,.cf-group textarea{background:var(--warm);border:1.5px solid var(--border);border-radius:11px;padding:11px 14px;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.2s;width:100%;}
+.cf-group input:focus,.cf-group select:focus,.cf-group textarea:focus{border-color:var(--orange);}
+.cf-group textarea{resize:vertical;min-height:100px;}
+.cf-disclaimer{font-size:0.72rem;color:var(--light);line-height:1.6;margin-bottom:16px;padding:10px 12px;background:var(--warm);border-radius:8px;}
+
+/* ═══════════════════════ LEGAL HUB PAGE ═══════════════════════ */
+.legal-hub-hero{background:linear-gradient(135deg,#0f1e4a 0%,var(--blue) 100%);color:white;padding:72px 5% 56px;text-align:center;}
+.legal-hub-hero .section-label{color:#93b4ff;}
+.legal-hub-hero h1{font-family:'Fraunces',serif;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:900;color:white;line-height:1.1;margin-bottom:16px;}
+.legal-hub-hero p{color:rgba(255,255,255,0.72);font-size:0.95rem;line-height:1.7;max-width:540px;margin:0 auto;}
+.legal-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:20px 5% 0;border-bottom:1px solid var(--legal-border);background:var(--legal-bg);}
+.ltab{padding:10px 18px;border-radius:12px 12px 0 0;font-size:0.82rem;font-weight:600;cursor:pointer;border:1.5px solid transparent;border-bottom:none;color:var(--mid);transition:all 0.2s;font-family:'DM Sans',sans-serif;background:transparent;}
+.ltab:hover{color:var(--blue);}
+.ltab.active{background:white;color:var(--blue);border-color:var(--legal-border);}
+.legal-tab-content{display:none;padding:40px 5%;max-width:860px;margin:0 auto;}
+.legal-tab-content.active{display:block;}
+.legal-doc h2{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:900;margin-bottom:6px;}
+.legal-doc .doc-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;}
+.legal-doc .doc-badge{background:var(--legal-bg);border:1px solid var(--legal-border);color:var(--blue);padding:4px 10px;border-radius:6px;font-size:0.7rem;font-weight:700;}
+.legal-doc .doc-section{margin-bottom:24px;}
+.legal-doc .doc-section h3{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.legal-doc .doc-section p,.legal-doc .doc-section li{font-size:0.84rem;color:var(--mid);line-height:1.8;margin-bottom:6px;}
+.legal-doc .doc-section ol,.legal-doc .doc-section ul{padding-left:18px;}
+.warning-box{background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px;padding:16px 20px;margin:20px 0;font-size:0.82rem;color:#92400e;line-height:1.7;}
+.warning-box strong{color:#78350f;}
+.info-box{background:var(--legal-bg);border:1.5px solid var(--legal-border);border-radius:12px;padding:16px 20px;margin:20px 0;font-size:0.82rem;color:var(--blue);line-height:1.7;}
+.standards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:20px;}
+.std-card{background:var(--card-bg);border:1.5px solid var(--legal-border);border-radius:14px;padding:20px;}
+.std-card h4{font-family:'Fraunces',serif;font-weight:700;font-size:0.95rem;color:var(--blue);margin-bottom:6px;}
+.std-card p{font-size:0.76rem;color:var(--mid);line-height:1.6;}
+.std-code{display:inline-block;background:var(--legal-bg);border:1px solid var(--legal-border);color:var(--blue);padding:3px 8px;border-radius:5px;font-size:0.66rem;font-weight:700;margin-top:8px;}
+
+/* ═══════════════════════ FOOTER ═══════════════════════ */
+footer{background:var(--dark);color:rgba(255,255,255,0.6);padding:52px 5% 0;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:28px;margin-bottom:40px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.footer-brand .nav-logo{color:white;font-size:1.4rem;}
+.footer-brand p{font-size:0.8rem;max-width:230px;margin-top:10px;line-height:1.6;}
+.footer-brand .compliance-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:14px;}
+.foot-badge{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);padding:3px 8px;border-radius:5px;font-size:0.62rem;font-weight:700;letter-spacing:0.04em;}
+.footer-links h4{color:white;font-size:0.83rem;margin-bottom:12px;font-weight:700;}
+.footer-links a{display:block;text-decoration:none;color:rgba(255,255,255,0.48);font-size:0.8rem;margin-bottom:7px;transition:color 0.2s;cursor:pointer;}
+.footer-links a:hover{color:var(--orange-light);}
+.footer-legal-strip{background:rgba(0,0,0,0.25);margin:0 -5%;padding:18px 5%;}
+.footer-disclaimer{font-size:0.68rem;color:rgba(255,255,255,0.28);line-height:1.7;text-align:center;max-width:820px;margin:0 auto 14px;}
+.footer-bottom{padding:14px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.footer-bottom p{font-size:0.76rem;}
+.footer-bottom span{color:var(--orange-light);}
+
+/* ═══════════════════════ CONTACT MODAL (service) ═══════════════════════ */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:600;background:rgba(28,26,23,0.6);backdrop-filter:blur(5px);align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card-bg);border-radius:22px;padding:32px;max-width:460px;width:92%;box-shadow:0 24px 60px rgba(0,0,0,0.2);animation:popIn 0.3s ease;max-height:90vh;overflow-y:auto;}
+@keyframes popIn{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
+.modal h3{font-family:'Fraunces',serif;font-size:1.35rem;margin-bottom:5px;}
+.modal-sub{font-size:0.83rem;color:var(--mid);margin-bottom:6px;}
+.modal-cpid{font-size:0.65rem;color:var(--light);font-family:monospace;margin-bottom:18px;}
+.modal-info{display:flex;flex-direction:column;gap:11px;margin-bottom:14px;}
+.modal-row{display:flex;align-items:center;gap:11px;}
+.modal-icon{width:36px;height:36px;background:var(--warm);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0;}
+.modal-row span{font-size:0.85rem;color:var(--mid);}
+.modal-row strong{display:block;font-size:0.9rem;color:var(--dark);}
+.modal-pla-note{background:var(--green-light);border:1px solid rgba(58,124,92,0.3);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:0.73rem;color:var(--green);line-height:1.6;}
+.modal-disclaimer{font-size:0.68rem;color:var(--light);line-height:1.6;padding:9px 11px;background:var(--warm);border-radius:8px;margin-bottom:14px;}
+.modal-close{width:100%;background:var(--orange);color:white;border:none;border-radius:50px;padding:11px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:background 0.2s;}
+.modal-close:hover{background:var(--orange-dark);}
+
+/* ═══════════════════════ RESPONSIVE ═══════════════════════ */
+@media(max-width:900px){
+  .contact-grid{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .hero{grid-template-columns:1fr;padding-top:72px;}
+  .hero-visual{display:none;}
+  nav .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .form-grid{grid-template-columns:1fr;}
+  .form-wrap{padding:22px;}
+  .legal-tabs{gap:4px;}
+  .ltab{font-size:0.76rem;padding:8px 13px;}
+  .footer-top{gap:22px;}
+  div[style*="grid-template-columns:1fr 1fr"]{display:block!important;}
+  div[style*="grid-template-columns:1fr 1fr"] > div{margin-bottom:28px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ COOKIE BANNER (non-blocking) ═══════════════ -->
+<div id="cookieBanner" role="alert" aria-live="polite">
+  <p>🍪 We use cookies to improve your experience. This site is fully accessible regardless of your choice. See our <a onclick="goPage('legal');switchTab('privacy')">Privacy Policy</a> and <a onclick="goPage('legal');switchTab('eula')">EULA v2.1</a> for details. Compliant with ISO/IEC 27001:2022 &amp; PDPA.</p>
+  <div class="cookie-btns">
+    <button class="cbtn-yes" onclick="acceptCookies('all')">Accept All</button>
+    <button class="cbtn-no" onclick="acceptCookies('essential')">Essential Only</button>
+    <button class="cbtn-settings" onclick="goPage('legal');switchTab('privacy');acceptCookies('essential')">Cookie Settings</button>
+  </div>
+</div>
+
+<!-- ═══════════════ TOAST ═══════════════ -->
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav role="navigation" aria-label="Main navigation">
+  <a class="nav-logo" onclick="goPage('home')" aria-label="SkillConnect Home">
+    <span>Skill</span>Connect <div class="logo-dot" aria-hidden="true"></div>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a onclick="goPage('home')" data-page="home">Home</a>
+    <a onclick="goPage('browse')" data-page="browse">Browse Services</a>
+    <a onclick="goPage('about')" data-page="about">About</a>
+    <a onclick="goPage('faq')" data-page="faq">FAQ</a>
+    <a onclick="goPage('contact')" data-page="contact">Contact</a>
+    <a onclick="goPage('post')" data-page="post" class="nav-cta">+ Post a Service</a>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" onclick="toggleDark()" aria-label="Toggle dark mode" title="Dark mode">🌙</button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a onclick="goPage('home');closeMenu()">Home</a>
+  <a onclick="goPage('browse');closeMenu()">Browse Services</a>
+  <a onclick="goPage('post');closeMenu()">Post a Service</a>
+  <a onclick="goPage('about');closeMenu()">About Us</a>
+  <a onclick="goPage('faq');closeMenu()">FAQ</a>
+  <a onclick="goPage('contact');closeMenu()">Contact</a>
+  <a onclick="goPage('legal');closeMenu()" style="color:var(--blue)">Legal &amp; Standards</a>
+</div>
+
+<!-- ═══════════════ COMPLIANCE BAR ═══════════════ -->
+<div class="compliance-bar" role="complementary" aria-label="Compliance certifications">
+  <div class="comp-item"><div class="cd"></div>ISO/IEC 27001:2022</div>
+  <div class="comp-item"><div class="cd"></div>ISO 9001:2015</div>
+  <div class="comp-item"><div class="cd"></div>IEEE 2510-2018</div>
+  <div class="comp-item"><div class="cd"></div>WCAG 2.1 AA</div>
+  <div class="comp-item"><div class="cd"></div>CPID Enabled</div>
+  <div class="comp-item"><div class="cd"></div>EULA v2.1</div>
+  <div class="comp-item"><div class="cd"></div>PDPA Compliant</div>
+  <a onclick="goPage('legal')" style="font-size:0.68rem;color:var(--blue);text-decoration:underline;font-weight:700;cursor:pointer;">View All Standards →</a>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                    PAGE: HOME                           ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg-circle" aria-hidden="true"></div>
+    <div class="hero-bg-circle2" aria-hidden="true"></div>
+    <div>
+      <div class="hero-badge">🌍 ISO-Aligned · EULA-Governed · CPID-Assigned</div>
+      <h1>Find &amp; Share<br/><em>Local Skills</em><br/>Near You</h1>
+      <p>SkillConnect bridges the gap between people with skills and those who need them — right in your neighborhood. Free, transparent, and community-driven.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="goPage('browse')">🔍 Find a Service</button>
+        <button class="btn-secondary" onclick="goPage('post')">✋ Offer a Skill</button>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-card">
+        <div class="hero-card-top">
+          <div class="avatar" style="background:#fde8d8;color:#e8611a;">AK</div>
+          <div><div class="hero-card-name">Ayesha Khan</div><div class="hero-card-loc">📍 Gulshan, Karachi</div></div>
+          <span class="hero-card-tag">Tutoring</span>
+        </div>
+        <div class="hero-card-desc">Math &amp; Science tuition, Class 9–12. Rs. 500/hr · CPID: SKC-1001</div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-top">
+          <div class="avatar" style="background:#e8f5ee;color:#3a7c5c;">ZA</div>
+          <div><div class="hero-card-name">Zain Ahmed</div><div class="hero-card-loc">📍 Defence, Lahore</div></div>
+          <span class="hero-card-tag">Tech Help</span>
+        </div>
+        <div class="hero-card-desc">WiFi setup, virus removal, laptop repair. Rs. 800/visit · CPID: SKC-1002</div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-box"><div class="stat-num" id="liveCount">8</div><div class="stat-lbl">Live Listings</div></div>
+        <div class="stat-box"><div class="stat-num">18</div><div class="stat-lbl">Cities</div></div>
+        <div class="stat-box"><div class="stat-num">1.2k</div><div class="stat-lbl">Happy Users</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES on Home -->
+  <section class="section">
+    <div class="section-head reveal" style="text-align:center;max-width:500px;margin:0 auto 44px;">
+      <div class="section-label">Explore Categories</div>
+      <h2 class="section-title">What are you looking for?</h2>
+      <p class="section-sub">Browse CPID-registered, PLA-governed services in your area.</p>
+    </div>
+    <div class="categories-grid reveal">
+      <a class="cat-card" onclick="goPage('browse');filterCategory('Tutoring')"><div class="cat-icon">📚</div><div class="cat-name">Tutoring</div><div class="cat-count">48 services</div></a>
+      <a class="cat-card" onclick="goPage('browse');filterCategory('Tech Help')"><div class="cat-icon">💻</div><div class="cat-name">Tech Help</div><div class="cat-count">32 services</div></a>
+      <a class="cat-card" onclick="goPage('browse');filterCategory('Home Repair')"><div class="cat-icon">🔧</div><div class="cat-name">Home Repair</div><div class="cat-count">27 services</div></a>
+      <a class="cat-card" onclick="goPage('browse');filterCategory('Music')"><div class="cat-icon">🎵</div><div class="cat-name">Music</div><div class="cat-count">19 services</div></a>
+      <a class="cat-card" onclick="goPage('browse');filterCategory('Gardening')"><div class="cat-icon">🌿</div><div class="cat-name">Gardening</div><div class="cat-count">14 services</div></a>
+      <a class="cat-card" onclick="goPage('browse');filterCategory('Cleaning')"><div class="cat-icon">🧹</div><div class="cat-name">Cleaning</div><div class="cat-count">22 services</div></a>
+      <a class="cat-card" onclick="goPage('browse');filterCategory('Cooking')"><div class="cat-icon">🍳</div><div class="cat-name">Cooking</div><div class="cat-count">16 services</div></a>
+      <a class="cat-card" onclick="goPage('browse');filterCategory('All')"><div class="cat-icon">✨</div><div class="cat-name">All Skills</div><div class="cat-count">178+ services</div></a>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS on Home -->
+  <section class="section" style="background:var(--warm);">
+    <div class="section-head reveal" style="text-align:center;max-width:500px;margin:0 auto 44px;">
+      <div class="section-label">Simple Process</div>
+      <h2 class="section-title">How SkillConnect Works</h2>
+      <p class="section-sub">Four steps. EULA-compliant. CPID-tracked. ISO-aligned.</p>
+    </div>
+    <div class="steps-grid reveal">
+      <div class="step"><div class="step-num">1</div><h3>Browse or Post</h3><p>Explore CPID-registered services nearby, or post your own skill with a PLA-compliant listing form.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Review &amp; Verify</h3><p>Check provider ratings, read descriptions, and review CPID credentials before contacting.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Connect Directly</h3><p>Reach out by phone or email — no middleman. All contact info disclosed post-listing agreement.</p></div>
+      <div class="step"><div class="step-num">4</div><h3>Rate &amp; Review</h3><p>Your feedback powers our ISO 9001 quality loop and builds community trust and accountability.</p></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS on Home -->
+  <section class="section">
+    <div class="section-head reveal" style="text-align:center;max-width:500px;margin:0 auto 40px;">
+      <div class="section-label">Community Voices</div>
+      <h2 class="section-title">What People Say</h2>
+    </div>
+    <div class="testi-grid reveal">
+      <div class="testi-card"><div class="stars">★★★★★</div><p class="testi-text">"Found a brilliant Maths tutor in 10 minutes. The CPID gave me confidence it's a verified listing."</p><div class="testi-author"><div class="testi-av" style="background:#fde8d8;color:#e8611a;">SA</div><div><div class="testi-name">Sara Akhtar</div><div class="testi-role">Parent, Karachi</div></div></div></div>
+      <div class="testi-card"><div class="stars">★★★★★</div><p class="testi-text">"Got 4 guitar students in my first week. The PLA makes the platform feel professional and trustworthy."</p><div class="testi-author"><div class="testi-av" style="background:#e8f5ee;color:#3a7c5c;">OM</div><div><div class="testi-name">Omar Mirza</div><div class="testi-role">Music Teacher, Lahore</div></div></div></div>
+      <div class="testi-card"><div class="stars">★★★★☆</div><p class="testi-text">"The compliance badges and warranty disclaimer showed me this isn't a random classifieds site. Very legit."</p><div class="testi-author"><div class="testi-av" style="background:#ede9fe;color:#7c3aed;">RB</div><div><div class="testi-name">Rania Baig</div><div class="testi-role">Homemaker, Islamabad</div></div></div></div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER on Home -->
+  <section style="background:var(--orange);padding:60px 5%;text-align:center;">
+    <h2 style="font-family:'Fraunces',serif;font-size:2rem;color:white;font-weight:900;margin-bottom:12px;">Ready to share your skills?</h2>
+    <p style="color:rgba(255,255,255,0.82);font-size:0.95rem;max-width:480px;margin:0 auto 24px;line-height:1.7;">List your service for free. CPID assigned instantly. Governed by PLA v1.4 for full transparency.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn-primary" onclick="goPage('post')" style="background:white;color:var(--orange);">Post a Service Free →</button>
+      <button class="btn-outline-white" onclick="goPage('legal')">Read the Standards</button>
+    </div>
+  </section>
+
+</div><!-- /page-home -->
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                   PAGE: BROWSE                          ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="page-browse" class="page">
+  <section class="section listings-bg" style="padding-top:40px;">
+    <div class="section-head reveal">
+      <div class="section-label">Available Services</div>
+      <h2 class="section-title">Services Near You</h2>
+      <p class="section-sub">All listings are CPID-assigned and PLA-governed. Click "Contact" to connect directly.</p>
+    </div>
+    <div class="search-row reveal">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search skill, provider, location…" oninput="applyFilters()" aria-label="Search services"/>
+        <button class="search-btn" onclick="applyFilters()">Search</button>
+      </div>
+      <select class="price-filter" id="priceFilter" onchange="applyFilters()" aria-label="Price filter">
+        <option value="">All Prices</option>
+        <option value="free">Free</option>
+        <option value="low">Under Rs. 600</option>
+        <option value="mid">Rs. 600–1000</option>
+        <option value="high">Rs. 1000+</option>
+      </select>
+      <select class="price-filter" id="sortFilter" onchange="applyFilters()" aria-label="Sort by">
+        <option value="">Sort: Default</option>
+        <option value="rating">Highest Rated</option>
+        <option value="price_asc">Price: Low–High</option>
+        <option value="price_desc">Price: High–Low</option>
+      </select>
+    </div>
+    <div class="filter-chips reveal" id="filterChips">
+      <div class="chip active" onclick="filterChip(this,'All')">All</div>
+      <div class="chip" onclick="filterChip(this,'Tutoring')">📚 Tutoring</div>
+      <div class="chip" onclick="filterChip(this,'Tech Help')">💻 Tech</div>
+      <div class="chip" onclick="filterChip(this,'Home Repair')">🔧 Repairs</div>
+      <div class="chip" onclick="filterChip(this,'Music')">🎵 Music</div>
+      <div class="chip" onclick="filterChip(this,'Gardening')">🌿 Gardening</div>
+      <div class="chip" onclick="filterChip(this,'Cleaning')">🧹 Cleaning</div>
+      <div class="chip" onclick="filterChip(this,'Cooking')">🍳 Cooking</div>
+    </div>
+    <div class="results-count reveal" id="resultsCount" aria-live="polite"></div>
+    <div class="services-grid" id="servicesGrid" role="list"></div>
+    <div class="no-results" id="noResults"><div class="no-icon">🔍</div><p>No services match your search. Try different keywords or clear filters.</p><button class="btn-secondary" onclick="clearFilters()" style="margin-top:16px;">Clear Filters</button></div>
+  </section>
+</div><!-- /page-browse -->
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                   PAGE: POST A SERVICE                  ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="page-post" class="page">
+  <section class="section form-section" style="padding-top:48px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;">
+      <div class="reveal">
+        <div class="section-label">Earn From Your Skills</div>
+        <h2 class="section-title">List Your Service</h2>
+        <p class="section-sub">Free to post. CPID assigned instantly. Governed by PLA v1.4. Your listing will be visible to thousands of users in your city.</p>
+        <br/>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px;">
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <div style="width:38px;height:38px;background:rgba(232,97,26,0.15);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✅</div>
+            <div><strong style="font-size:0.88rem;color:white;">100% Free — No Hidden Charges</strong><p style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-top:3px;line-height:1.5;">No subscription, no commission on your earnings.</p></div>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <div style="width:38px;height:38px;background:rgba(232,97,26,0.15);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">🏷️</div>
+            <div><strong style="font-size:0.88rem;color:white;">Unique CPID Assigned</strong><p style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-top:3px;line-height:1.5;">Every listing gets a Consumer Product Identification code (SKC-XXXX) for traceability.</p></div>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <div style="width:38px;height:38px;background:rgba(232,97,26,0.15);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">🔐</div>
+            <div><strong style="font-size:0.88rem;color:white;">ISO 27001-Aligned Data Security</strong><p style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-top:3px;line-height:1.5;">Your data is handled per our Privacy Policy and ISO/IEC 27001:2022 controls.</p></div>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <div style="width:38px;height:38px;background:rgba(232,97,26,0.15);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">📋</div>
+            <div><strong style="font-size:0.88rem;color:white;">PLA-Governed &amp; Transparent</strong><p style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-top:3px;line-height:1.5;">By posting, you accept the <a onclick="goPage('legal');switchTab('pla')" style="color:var(--orange-light);text-decoration:underline;cursor:pointer;">Platform Listing Agreement v1.4</a>.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="form-wrap" id="formWrap">
+          <div class="form-grid" id="serviceForm">
+            <div class="form-group"><label for="f_name">Your Name *</label><input type="text" id="f_name" placeholder="Ahmed Ali" autocomplete="name"/><span class="err-msg">Name is required</span></div>
+            <div class="form-group"><label for="f_contact">Phone / Email *</label><input type="text" id="f_contact" placeholder="03xx-xxxxxxx or email"/><span class="err-msg">Contact info required</span></div>
+            <div class="form-group"><label for="f_title">Service Title *</label><input type="text" id="f_title" placeholder="e.g. Math Tutoring Class 9–12"/><span class="err-msg">Title is required</span></div>
+            <div class="form-group"><label for="f_cat">Category *</label>
+              <select id="f_cat"><option value="">Select category</option><option>Tutoring</option><option>Tech Help</option><option>Home Repair</option><option>Music</option><option>Gardening</option><option>Cleaning</option><option>Cooking</option><option>Other</option></select>
+              <span class="err-msg">Please select a category</span>
+            </div>
+            <div class="form-group"><label for="f_loc">City / Area *</label><input type="text" id="f_loc" placeholder="e.g. Gulshan, Karachi"/><span class="err-msg">Location is required</span></div>
+            <div class="form-group"><label for="f_price">Price (optional)</label><input type="text" id="f_price" placeholder="e.g. Rs. 500/hr or Free"/></div>
+            <div class="form-group full"><label for="f_desc">Service Description *</label><textarea id="f_desc" placeholder="Describe your service, qualifications, experience, and availability…"></textarea><span class="err-msg">Description is required</span></div>
+            <div class="form-group full">
+              <div class="form-pla-row">
+                <input type="checkbox" id="f_pla" onchange="checkFormReady()"/>
+                <label for="f_pla">I accept the <a onclick="goPage('legal');switchTab('pla')">PLA v1.4</a>, confirm all information is accurate and lawful, and understand my listing will be publicly visible with a unique CPID. I have read the <a onclick="goPage('legal');switchTab('warranty')">Warranty Disclaimer</a>.</label>
+              </div>
+            </div>
+            <div class="form-group full"><button class="form-submit" id="formSubmitBtn" onclick="submitForm()">🚀 Post My Service (Free)</button></div>
+          </div>
+          <div class="form-success" id="formSuccess">
+            <div class="tick">✅</div>
+            <h3>Service Posted!</h3>
+            <p>Your service is now live and visible to your community.</p>
+            <div class="cpid-box" id="cpidDisplay"></div>
+            <p style="font-size:0.72rem;color:rgba(255,255,255,0.35);margin-top:6px;">Save your CPID — it's your listing reference for any support queries.</p>
+            <button class="btn-again" onclick="resetForm()">Post Another Service</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- /page-post -->
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                    PAGE: ABOUT                          ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="page-about" class="page">
+  <div class="about-hero">
+    <div class="section-label">Our Story</div>
+    <h1>Connecting Communities,<br/><em style="font-style:italic;color:var(--orange-light);">One Skill at a Time</em></h1>
+    <p>SkillConnect was built as a Professional Practices project to demonstrate how digital platforms can operate transparently, responsibly, and in compliance with international standards.</p>
+  </div>
+
+  <section class="section">
+    <div class="section-head reveal">
+      <div class="section-label">Our Purpose</div>
+      <h2 class="section-title">Mission &amp; Values</h2>
+      <p class="section-sub">We believe skills should be accessible to everyone in every neighborhood — not locked behind agencies or high fees.</p>
+    </div>
+    <div class="mission-grid reveal">
+      <div class="mission-card"><div class="mission-icon">🎯</div><h4>Our Mission</h4><p>To create a free, transparent, and community-governed marketplace where local skills and services are easily discoverable and accessible for everyone.</p></div>
+      <div class="mission-card"><div class="mission-icon">🔐</div><h4>Privacy &amp; Security</h4><p>We align all data practices with ISO/IEC 27001:2022. Your personal data is never sold. Listings are stored securely and removed on request.</p></div>
+      <div class="mission-card"><div class="mission-icon">📋</div><h4>Legal Transparency</h4><p>Every interaction is governed by EULA v2.1 and PLA v1.4. All listings are CPID-registered. We operate with full legal clarity for providers and seekers.</p></div>
+      <div class="mission-card"><div class="mission-icon">♿</div><h4>Accessibility</h4><p>We follow WCAG 2.1 Level AA accessibility guidelines (referenced under IEEE standards) to ensure the platform works for every user.</p></div>
+      <div class="mission-card"><div class="mission-icon">🌍</div><h4>Community First</h4><p>SkillConnect is built for local neighborhoods. We prioritize genuine human connection over algorithmic engagement or paid promotion.</p></div>
+      <div class="mission-card"><div class="mission-icon">✅</div><h4>Quality Standards</h4><p>Service quality tracking follows ISO 9001:2015 principles. Provider feedback loops and ratings are central to our quality assurance process.</p></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--warm);">
+    <div class="section-head reveal">
+      <div class="section-label">The Team</div>
+      <h2 class="section-title">Who Built SkillConnect</h2>
+      <p class="section-sub">A student team from the Professional Practices course, committed to building something real and standards-compliant.</p>
+    </div>
+    <div class="team-grid reveal">
+      <div class="team-card"><div class="team-av" style="background:#fde8d8;color:#e8611a;">AH</div><div class="team-name">Ali Hassan</div><div class="team-role">Lead Developer</div><div class="team-bio">Designed the platform architecture and frontend. Focused on WCAG accessibility and mobile responsiveness.</div></div>
+      <div class="team-card"><div class="team-av" style="background:#e8f5ee;color:#3a7c5c;">SR</div><div class="team-name">Sana Raza</div><div class="team-role">Legal &amp; Compliance</div><div class="team-bio">Drafted EULA, PLA, and mapped all ISO/IEEE standards. Ensured PDPA compliance and warranty documentation.</div></div>
+      <div class="team-card"><div class="team-av" style="background:#ede9fe;color:#7c3aed;">ZK</div><div class="team-name">Zubair Khan</div><div class="team-role">UX &amp; Design</div><div class="team-bio">Created the visual design system, component library, and user experience flow with a focus on clarity and trust.</div></div>
+      <div class="team-card"><div class="team-av" style="background:#dbeafe;color:#2563eb;">FM</div><div class="team-name">Fatima Malik</div><div class="team-role">Product &amp; Research</div><div class="team-bio">Led requirements analysis, community research, and the CPID framework design for service identification.</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head reveal" style="text-align:center;max-width:500px;margin:0 auto 40px;">
+      <div class="section-label">By the Numbers</div>
+      <h2 class="section-title">SkillConnect in Numbers</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;" class="reveal">
+      <div class="stat-box" style="padding:24px;"><div class="stat-num">8+</div><div class="stat-lbl">Active Listings</div></div>
+      <div class="stat-box" style="padding:24px;"><div class="stat-num">7</div><div class="stat-lbl">Categories</div></div>
+      <div class="stat-box" style="padding:24px;"><div class="stat-num">5</div><div class="stat-lbl">Standards Applied</div></div>
+      <div class="stat-box" style="padding:24px;"><div class="stat-num">18</div><div class="stat-lbl">Cities Covered</div></div>
+      <div class="stat-box" style="padding:24px;"><div class="stat-num">v2.1</div><div class="stat-lbl">EULA Version</div></div>
+      <div class="stat-box" style="padding:24px;"><div class="stat-num">100%</div><div class="stat-lbl">Free to Use</div></div>
+    </div>
+  </section>
+</div><!-- /page-about -->
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                    PAGE: FAQ                            ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="page-faq" class="page">
+  <div class="faq-hero">
+    <div class="section-label">Help Center</div>
+    <h2 style="font-family:'Fraunces',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:900;margin-bottom:12px;">Frequently Asked Questions</h2>
+    <p style="color:var(--mid);font-size:0.95rem;max-width:480px;margin:0 auto;">Everything you need to know about SkillConnect, legal standards, CPID, and how listings work.</p>
+    <div class="faq-search">
+      <input type="text" id="faqSearch" placeholder="Search questions…" oninput="filterFAQ()"/>
+    </div>
+  </div>
+  <section class="section" style="padding-top:36px;">
+    <div class="faq-cats" id="faqCats">
+      <div class="chip active" onclick="filterFAQCat(this,'all')">All</div>
+      <div class="chip" onclick="filterFAQCat(this,'general')">General</div>
+      <div class="chip" onclick="filterFAQCat(this,'legal')">Legal &amp; Compliance</div>
+      <div class="chip" onclick="filterFAQCat(this,'posting')">Posting Services</div>
+      <div class="chip" onclick="filterFAQCat(this,'cpid')">CPID</div>
+      <div class="chip" onclick="filterFAQCat(this,'privacy')">Privacy</div>
+    </div>
+    <div class="faq-items" id="faqItems"></div>
+  </section>
+</div><!-- /page-faq -->
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                   PAGE: CONTACT                         ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="page-contact" class="page">
+  <section class="section" style="padding-top:48px;">
+    <div class="section-head reveal">
+      <div class="section-label">Get in Touch</div>
+      <h2 class="section-title">Contact SkillConnect</h2>
+      <p class="section-sub">Questions about the platform, legal documents, CPID, or your listing? We're here to help.</p>
+    </div>
+    <div class="contact-grid reveal">
+      <div>
+        <div class="contact-info-cards">
+          <div class="contact-card"><div class="contact-card-icon">📧</div><div><h4>Email Support</h4><p>support@skillconnect.pk<br/>For general queries and listing help.</p></div></div>
+          <div class="contact-card"><div class="contact-card-icon">⚖️</div><div><h4>Legal &amp; Compliance</h4><p>legal@skillconnect.pk<br/>EULA, PLA, CPID, data removal requests.</p></div></div>
+          <div class="contact-card"><div class="contact-card-icon">🚩</div><div><h4>Report a Listing</h4><p>report@skillconnect.pk<br/>Use listing CPID in your subject line.</p></div></div>
+          <div class="contact-card"><div class="contact-card-icon">🎓</div><div><h4>Academic Queries</h4><p>This is a Professional Practices university project. Academic correspondence welcome.</p></div></div>
+        </div>
+        <div style="margin-top:20px;padding:16px 18px;background:var(--legal-bg);border:1.5px solid var(--legal-border);border-radius:14px;">
+          <p style="font-size:0.76rem;color:var(--blue);line-height:1.7;"><strong>Document References:</strong> EULA v2.1 · PLA v1.4 · Privacy Policy v1.2 · Warranty Disclaimer v1.0<br/>Platform Ref: SKC-PLAT-2025 · ISO/IEC 27001:2022 Aligned · ISO 9001:2015</p>
+        </div>
+      </div>
+      <div class="contact-form-wrap reveal">
+        <h3>Send a Message</h3>
+        <p>We typically respond within 1–2 business days.</p>
+        <div class="cf-group"><label>Your Name *</label><input type="text" id="cf_name" placeholder="Ahmed Ali"/></div>
+        <div class="cf-group"><label>Email Address *</label><input type="email" id="cf_email" placeholder="you@email.com"/></div>
+        <div class="cf-group"><label>Subject *</label>
+          <select id="cf_subject">
+            <option value="">Select a topic</option>
+            <option>General Inquiry</option>
+            <option>Listing / CPID Query</option>
+            <option>Legal / EULA / PLA</option>
+            <option>Data Removal Request</option>
+            <option>Report a Listing</option>
+            <option>Academic / Research</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="cf-group"><label>CPID (if applicable)</label><input type="text" id="cf_cpid" placeholder="e.g. SKC-1001"/></div>
+        <div class="cf-group"><label>Message *</label><textarea id="cf_msg" placeholder="Describe your query in detail…"></textarea></div>
+        <div class="cf-disclaimer">📋 By submitting this form you agree to our <a onclick="goPage('legal');switchTab('privacy')" style="color:var(--blue);cursor:pointer;">Privacy Policy</a>. We process form data solely to respond to your query, per ISO/IEC 27001:2022 data minimisation principles.</div>
+        <button class="btn-primary" onclick="submitContact()" style="width:100%;justify-content:center;">Send Message →</button>
+      </div>
+    </div>
+  </section>
+</div><!-- /page-contact -->
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                PAGE: LEGAL HUB                          ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="page-legal" class="page">
+  <div class="legal-hub-hero">
+    <div class="section-label">Legal &amp; Compliance Hub</div>
+    <h1>Standards, Policies<br/>&amp; <em style="font-style:italic;color:#93b4ff;">Legal Documents</em></h1>
+    <p>All SkillConnect legal documents, compliance frameworks, and standard mappings in one place. Full transparency — no barriers to access.</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="legal-tabs" id="legalTabBar">
+    <button class="ltab active" onclick="switchTab('eula')">EULA v2.1</button>
+    <button class="ltab" onclick="switchTab('pla')">PLA v1.4</button>
+    <button class="ltab" onclick="switchTab('privacy')">Privacy Policy</button>
+    <button class="ltab" onclick="switchTab('warranty')">Warranty &amp; Guarantee</button>
+    <button class="ltab" onclick="switchTab('cpid')">CPID Framework</button>
+    <button class="ltab" onclick="switchTab('standards')">ISO / IEEE Standards</button>
+  </div>
+
+  <!-- EULA -->
+  <div id="tab-eula" class="legal-tab-content active">
+    <div class="legal-doc">
+      <h2>End User License Agreement (EULA)</h2>
+      <div class="doc-meta">
+        <span class="doc-badge">Version 2.1</span>
+        <span class="doc-badge">Effective: 1 January 2025</span>
+        <span class="doc-badge">Ref: SKC-EULA-2025</span>
+        <span class="doc-badge">ISO/IEC 27001:2022 Aligned</span>
+      </div>
+      <div class="info-box">ℹ️ This EULA applies to all users of SkillConnect. You are not required to formally sign this document to use the platform — continued use constitutes acceptance per Section 1.</div>
+
+      <div class="doc-section"><h3>1. Acceptance of Terms</h3><p>By accessing or using the SkillConnect platform ("Platform"), you ("User") agree to be bound by this EULA, our Platform Listing Agreement (PLA), Privacy Policy, and all applicable laws. Continued use of the Platform constitutes acceptance of the most current version of these terms. If you do not agree, please discontinue use of the Platform.</p></div>
+
+      <div class="doc-section"><h3>2. License Grant</h3><p>SkillConnect grants you a limited, non-exclusive, non-transferable, revocable license to access and use the Platform solely for the purpose of connecting local service providers with service seekers. This license does not include any rights to sublicense, distribute, copy, modify, or commercially exploit the Platform or its content without prior written permission.</p></div>
+
+      <div class="doc-section"><h3>3. Platform Use Restrictions</h3><ol><li>You must not use the Platform for any unlawful purpose or in violation of any local, national, or international law.</li><li>You must not post false, misleading, or fraudulent service listings.</li><li>You must not attempt to scrape, harvest, or extract data from the Platform without written authorisation.</li><li>You must not impersonate any person or entity or misrepresent your affiliation with any person or entity.</li><li>You must not upload or transmit viruses, malware, or any other harmful code.</li></ol></div>
+
+      <div class="doc-section"><h3>4. Consumer Product Identification (CPID)</h3><p>All service listings are assigned a unique CPID (SKC-XXXX). CPIDs are permanent identifiers used for traceability, dispute resolution, and quality tracking. Users must not falsify, duplicate, or misuse CPID codes. See the <a onclick="switchTab('cpid')" style="color:var(--blue);cursor:pointer;">CPID Framework</a> for full details.</p></div>
+
+      <div class="doc-section"><h3>5. Warranty &amp; Liability</h3><p>SkillConnect is a marketplace facilitator only. We make no warranties — express or implied — regarding the quality, safety, legality, or outcomes of any listed service. See the full <a onclick="switchTab('warranty')" style="color:var(--blue);cursor:pointer;">Warranty &amp; Guarantee Disclaimer</a>. To the fullest extent permitted by law, SkillConnect's total liability to any User is limited to PKR 0 (zero), as the Platform is provided free of charge.</p></div>
+
+      <div class="doc-section"><h3>6. Intellectual Property</h3><p>All Platform content, branding, code, and design is protected under applicable copyright law. Users may not reproduce, adapt, or distribute any Platform content without prior written consent from SkillConnect.</p></div>
+
+      <div class="doc-section"><h3>7. Data &amp; Privacy</h3><p>Data collection and processing are governed by our <a onclick="switchTab('privacy')" style="color:var(--blue);cursor:pointer;">Privacy Policy</a> and aligned with ISO/IEC 27001:2022 and the Personal Data Protection Act (PDPA). Users may request deletion of their data at any time by contacting legal@skillconnect.pk.</p></div>
+
+      <div class="doc-section"><h3>8. Governing Law</h3><p>This EULA is governed by the laws of Pakistan. Disputes are subject to the exclusive jurisdiction of the courts of Karachi, Pakistan.</p></div>
+
+      <div class="doc-section"><h3>9. Amendments</h3><p>SkillConnect reserves the right to amend this EULA at any time. The most current version will always be available on this page. Last revised: April 2025. Version: 2.1. Document Ref: SKC-EULA-2025.</p></div>
+    </div>
+  </div>
+
+  <!-- PLA -->
+  <div id="tab-pla" class="legal-tab-content">
+    <div class="legal-doc">
+      <h2>Platform Listing Agreement (PLA)</h2>
+      <div class="doc-meta">
+        <span class="doc-badge">Version 1.4</span>
+        <span class="doc-badge">Ref: SKC-PLA-2025-v1.4</span>
+        <span class="doc-badge">Effective: 1 January 2025</span>
+        <span class="doc-badge">ISO 9001:2015 Aligned</span>
+      </div>
+      <div class="info-box">ℹ️ This agreement applies specifically to Service Providers who list services on SkillConnect. Acceptance is confirmed by checking the PLA checkbox on the "Post a Service" form.</div>
+
+      <div class="doc-section"><h3>1. Provider Eligibility</h3><p>Any individual aged 18 or above residing in Pakistan may list a service on SkillConnect. Regulated services (medical, legal, financial, electrical, structural engineering) require the provider to hold valid professional licences.</p></div>
+
+      <div class="doc-section"><h3>2. Listing Accuracy</h3><p>Providers warrant that all listing information — title, description, pricing, qualifications, contact details — is accurate, truthful, and not misleading. Providers must promptly update listings if information changes. Misrepresentation may result in immediate removal and legal consequences.</p></div>
+
+      <div class="doc-section"><h3>3. CPID Assignment &amp; Responsibility</h3><p>Upon submission, each listing is assigned a unique CPID (SKC-XXXX). This identifier is permanent and must not be falsified. Providers are responsible for all activity associated with their CPID. CPIDs are used for accountability, dispute resolution, and ISO 9001 quality tracking.</p></div>
+
+      <div class="doc-section"><h3>4. Prohibited Listings</h3><ol><li>Illegal or unlicensed professional services</li><li>Deceptive, fraudulent, or misleading offers</li><li>Content infringing third-party intellectual property</li><li>Services promoting harm, hate, or discrimination</li><li>Spam, duplicate, or automated listings</li></ol></div>
+
+      <div class="doc-section"><h3>5. Pricing &amp; Payments</h3><p>SkillConnect does not process or facilitate payments. All pricing shown is indicative only and negotiated directly between provider and client. Providers are solely responsible for applicable taxes on income earned through services found via the Platform.</p></div>
+
+      <div class="doc-section"><h3>6. Quality Commitment</h3><p>Providers commit to performing services with reasonable care and skill, consistent with ISO 9001:2015 quality management principles. Providers agree to respond to feedback professionally and resolve complaints in good faith.</p></div>
+
+      <div class="doc-section"><h3>7. Data &amp; Visibility</h3><p>By listing, providers consent to public display of their name, contact information, category, and service description. Data is processed per our Privacy Policy and ISO/IEC 27001:2022 controls. Providers may request removal at any time.</p></div>
+
+      <div class="doc-section"><h3>8. Termination</h3><p>SkillConnect may remove any listing at its discretion for PLA violations without prior notice. Providers may remove their listings by contacting support@skillconnect.pk referencing their CPID.</p></div>
+
+      <div class="doc-section"><h3>9. Indemnification</h3><p>Providers agree to indemnify and hold SkillConnect harmless from any claims, damages, losses, or expenses (including legal fees) arising from: (a) their service provision; (b) listing content; (c) violation of this PLA or any applicable law.</p></div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy -->
+  <div id="tab-privacy" class="legal-tab-content">
+    <div class="legal-doc">
+      <h2>Privacy Policy</h2>
+      <div class="doc-meta">
+        <span class="doc-badge">Version 1.2</span>
+        <span class="doc-badge">Ref: SKC-PRIV-2025</span>
+        <span class="doc-badge">ISO/IEC 27001:2022</span>
+        <span class="doc-badge">PDPA Compliant</span>
+      </div>
+      <div class="info-box">ℹ️ We are committed to protecting your privacy. We do not sell your data. We do not serve ads based on your data.</div>
+
+      <div class="doc-section"><h3>1. Data We Collect</h3><ol><li><strong>Service Providers:</strong> Name, contact details (email/phone), service description, location, pricing — submitted voluntarily via the listing form.</li><li><strong>All Users:</strong> Browser type, IP address (anonymised), pages visited — collected automatically for security and analytics.</li><li><strong>Cookie Data:</strong> Session and preference cookies as described in our Cookie Policy (EULA §7).</li></ol></div>
+
+      <div class="doc-section"><h3>2. How We Use Data</h3><ol><li>To display service listings to users searching for services.</li><li>To assign and track CPID identifiers for quality and dispute management.</li><li>To respond to support queries and contact form submissions.</li><li>To improve platform performance and security in accordance with ISO/IEC 27001:2022.</li></ol><p>We do <strong>not</strong> use your data for advertising, profiling, or sale to third parties.</p></div>
+
+      <div class="doc-section"><h3>3. Data Retention</h3><p>Service listing data is retained for as long as the listing is active. On removal request, data is deleted within 30 days. Contact form data is retained for 90 days for response purposes, then deleted. Anonymised analytics data may be retained indefinitely.</p></div>
+
+      <div class="doc-section"><h3>4. Your Rights</h3><ol><li>Right to access the personal data we hold about you.</li><li>Right to correction of inaccurate data.</li><li>Right to erasure ("right to be forgotten").</li><li>Right to object to processing.</li><li>Right to data portability.</li></ol><p>To exercise any right, email legal@skillconnect.pk with your name and CPID (if applicable).</p></div>
+
+      <div class="doc-section"><h3>5. Cookies</h3><p>We use essential cookies (session management) and optional analytics cookies. You may accept or decline optional cookies via the banner shown on first visit. Essential cookies cannot be disabled as they are necessary for the Platform to function. All cookie usage is compliant with PDPA and ISO/IEC 27001:2022.</p></div>
+
+      <div class="doc-section"><h3>6. Security</h3><p>We implement security controls aligned with ISO/IEC 27001:2022, including access controls, data minimisation, and incident response procedures. As a student project, we note that the Platform does not currently use a backend server — data exists in session memory only.</p></div>
+
+      <div class="doc-section"><h3>7. Contact</h3><p>Data protection queries: legal@skillconnect.pk · Document Ref: SKC-PRIV-2025 · Last Updated: April 2025.</p></div>
+    </div>
+  </div>
+
+  <!-- Warranty -->
+  <div id="tab-warranty" class="legal-tab-content">
+    <div class="legal-doc">
+      <h2>Warranty &amp; Guarantee Disclaimer</h2>
+      <div class="doc-meta">
+        <span class="doc-badge">Version 1.0</span>
+        <span class="doc-badge">Ref: SKC-WARR-2025</span>
+        <span class="doc-badge">ISO/IEC 25010:2011</span>
+        <span class="doc-badge">Per EULA §5</span>
+      </div>
+      <div class="warning-box"><strong>⚠️ Important:</strong> SkillConnect operates as a marketplace facilitator only. We do not employ, vet, certify, or guarantee any service provider listed on the Platform. Read this document before engaging any provider.</div>
+
+      <div class="doc-section"><h3>1. Platform Warranty Status</h3><p>THE SKILLCONNECT PLATFORM IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED. THIS INCLUDES BUT IS NOT LIMITED TO WARRANTIES OF:</p><ol><li>MERCHANTABILITY</li><li>FITNESS FOR A PARTICULAR PURPOSE</li><li>NON-INFRINGEMENT</li><li>ACCURACY OR COMPLETENESS OF CONTENT</li><li>UNINTERRUPTED OR ERROR-FREE OPERATION</li></ol><p>This disclaimer is consistent with ISO/IEC 25010:2011 (SQuaRE — System and Software Quality Requirements and Evaluation), which defines quality characteristics for software products.</p></div>
+
+      <div class="doc-section"><h3>2. Service Provider Disclaimer</h3><ol><li>SkillConnect does not employ, endorse, or certify any listed Service Provider.</li><li>SkillConnect does not verify the qualifications, licences, or credentials of any Service Provider unless explicitly stated.</li><li>SkillConnect does not guarantee the quality, safety, legality, timeliness, or outcome of any service delivered by a Provider.</li><li>All service engagements are exclusively between the User and the independent Service Provider.</li><li>Users engage Service Providers entirely at their own risk.</li></ol></div>
+
+      <div class="doc-section"><h3>3. User Responsibilities</h3><ol><li>Users are strongly encouraged to verify provider credentials independently before engaging any service.</li><li>Users should request proof of professional licences for regulated services (medical, electrical, legal, etc.).</li><li>Users should agree on the scope, price, and terms of service directly with the provider before work begins.</li><li>SkillConnect recommends using CPID when referencing listings in any dispute or support request.</li></ol></div>
+
+      <div class="doc-section"><h3>4. Limitation of Liability</h3><p>To the maximum extent permitted by applicable law, SkillConnect, its directors, team members, and agents shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from the use of the Platform or any service found through the Platform, even if SkillConnect has been advised of the possibility of such damages.</p></div>
+
+      <div class="doc-section"><h3>5. Indemnity</h3><p>Users agree to indemnify SkillConnect and its team members from all claims, damages, losses, costs, and expenses (including reasonable legal fees) arising from their use of the Platform, their engagement of Service Providers, or their violation of this Warranty Disclaimer, the EULA, or any applicable law.</p></div>
+
+      <div class="doc-section"><h3>6. Governing Standards</h3><p>This disclaimer is informed by: ISO/IEC 25010:2011 (Software Quality), ISO 9001:2015 (Quality Management), and general best practices in digital marketplace law. Document Ref: SKC-WARR-2025. Last Updated: April 2025.</p></div>
+    </div>
+  </div>
+
+  <!-- CPID Framework -->
+  <div id="tab-cpid" class="legal-tab-content">
+    <div class="legal-doc">
+      <h2>Consumer Product Identification (CPID) Framework</h2>
+      <div class="doc-meta">
+        <span class="doc-badge">Standard: SKC-CPID-v1.0</span>
+        <span class="doc-badge">Effective: 1 January 2025</span>
+        <span class="doc-badge">ISO 9001:2015 Aligned</span>
+      </div>
+      <div class="info-box">ℹ️ Every service listing on SkillConnect is assigned a unique CPID (Consumer Product Identification code) upon submission. This code is your permanent listing reference.</div>
+
+      <div class="doc-section"><h3>1. What is a CPID?</h3><p>A CPID (Consumer Product Identification code) is a unique alphanumeric identifier assigned to each service listing on SkillConnect. Format: <strong>SKC-XXXX</strong> (e.g., SKC-1001, SKC-1002). CPIDs are inspired by standard product identification frameworks used in consumer protection, supply chain management, and digital commerce.</p></div>
+
+      <div class="doc-section"><h3>2. Purpose of CPID</h3><ol><li><strong>Traceability:</strong> Each listing can be uniquely referenced in support queries, disputes, or reports.</li><li><strong>Accountability:</strong> Providers are permanently linked to their CPID, discouraging fraudulent or misleading listings.</li><li><strong>Quality Tracking:</strong> CPIDs enable the platform to track ratings and feedback per listing, consistent with ISO 9001:2015 quality management.</li><li><strong>Dispute Resolution:</strong> Any complaint, report, or support request should reference the relevant CPID for efficient processing.</li></ol></div>
+
+      <div class="doc-section"><h3>3. CPID Assignment Process</h3><ol><li>Provider submits a listing via the "Post a Service" form.</li><li>Provider accepts the Platform Listing Agreement (PLA v1.4).</li><li>Upon submission, the system assigns the next available CPID in the SKC-XXXX series.</li><li>CPID is displayed on the listing card, in the contact modal, and in the provider's submission confirmation.</li><li>The CPID is permanent — it does not change even if listing details are updated.</li></ol></div>
+
+      <div class="doc-section"><h3>4. CPID Rules for Providers</h3><ol><li>Providers must not falsify, duplicate, or transfer their CPID to another listing or provider.</li><li>Providers must include their CPID in any support, complaint, or removal request.</li><li>Misuse of CPID constitutes a violation of the PLA and may result in listing removal.</li></ol></div>
+
+      <div class="doc-section"><h3>5. CPID Rules for Users</h3><ol><li>Users should note the CPID of any listing they engage with.</li><li>Users must reference the CPID when submitting a complaint or report about a listing.</li><li>Users must not misrepresent a CPID or use it to create false disputes.</li></ol></div>
+
+      <div class="doc-section"><h3>6. Current CPID Registry</h3>
+        <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.8rem;"><thead><tr style="background:var(--legal-bg);color:var(--blue);">
+          <th style="padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--legal-border);">CPID</th>
+          <th style="padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--legal-border);">Service Title</th>
+          <th style="padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--legal-border);">Provider</th>
+          <th style="padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--legal-border);">Category</th>
+          <th style="padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--legal-border);">Status</th>
+        </tr></thead>
+        <tbody id="cpidTable"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Standards -->
+  <div id="tab-standards" class="legal-tab-content">
+    <div class="legal-doc">
+      <h2>ISO / IEEE Standards Framework</h2>
+      <div class="doc-meta">
+        <span class="doc-badge">Ref: SKC-STDS-2025</span>
+        <span class="doc-badge">Professional Practices Mapping</span>
+      </div>
+      <p style="font-size:0.84rem;color:var(--mid);line-height:1.7;margin-bottom:24px;">This document maps how each international standard is applied to SkillConnect's design, operation, legal documents, and data practices.</p>
+
+      <div class="standards-grid">
+        <div class="std-card"><h4>ISO/IEC 27001:2022</h4><p>Information Security Management System (ISMS). Applied to: data collection minimisation, cookie handling, access controls, privacy policy, and incident response planning.</p><span class="std-code">Information Security</span></div>
+        <div class="std-card"><h4>ISO 9001:2015</h4><p>Quality Management System. Applied to: listing quality requirements, provider accountability, user feedback loops, CPID quality tracking, and complaint handling procedures.</p><span class="std-code">Quality Management</span></div>
+        <div class="std-card"><h4>IEEE 2510-2018</h4><p>IEEE Standard for the Application Programming Interface (API) for Data Distribution. Referenced for platform data exchange principles and structured service data presentation.</p><span class="std-code">Digital Platform Standards</span></div>
+        <div class="std-card"><h4>WCAG 2.1 Level AA</h4><p>Web Content Accessibility Guidelines. Applied to: keyboard navigation, ARIA labels, colour contrast, focus states, semantic HTML, and screen-reader compatibility throughout the platform.</p><span class="std-code">Accessibility (IEEE-endorsed)</span></div>
+        <div class="std-card"><h4>ISO/IEC 25010:2011</h4><p>SQuaRE — Software Quality Requirements and Evaluation. Referenced in the Warranty Disclaimer for defining the "as-is" quality characteristic basis of the platform's liability limitation.</p><span class="std-code">Software Quality</span></div>
+        <div class="std-card"><h4>PDPA (Pakistan)</h4><p>Personal Data Protection Act principles. Applied to: data minimisation, user consent (cookie banner), right to erasure, data retention limits, and privacy policy construction.</p><span class="std-code">Data Protection Law</span></div>
+      </div>
+
+      <div class="doc-section" style="margin-top:32px;"><h3>Standard-to-Document Mapping</h3>
+        <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+          <thead><tr style="background:var(--legal-bg);color:var(--blue);">
+            <th style="padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--legal-border);">Standard</th>
+            <th style="padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--legal-border);">Documents Applied</th>
+            <th style="padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--legal-border);">Platform Area</th>
+          </tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-weight:600;color:var(--blue);">ISO/IEC 27001:2022</td><td style="padding:10px 14px;color:var(--mid);">EULA §7, Privacy Policy §6, Cookie Banner</td><td style="padding:10px 14px;color:var(--mid);">Data security, user privacy, cookie handling</td></tr>
+            <tr style="border-bottom:1px solid var(--border);background:var(--warm);"><td style="padding:10px 14px;font-weight:600;color:var(--blue);">ISO 9001:2015</td><td style="padding:10px 14px;color:var(--mid);">PLA §6, CPID Framework, Ratings System</td><td style="padding:10px 14px;color:var(--mid);">Service quality, feedback, CPID tracking</td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-weight:600;color:var(--blue);">IEEE 2510-2018</td><td style="padding:10px 14px;color:var(--mid);">Standards Doc, Compliance Bar</td><td style="padding:10px 14px;color:var(--mid);">Data exchange, platform architecture principles</td></tr>
+            <tr style="border-bottom:1px solid var(--border);background:var(--warm);"><td style="padding:10px 14px;font-weight:600;color:var(--blue);">WCAG 2.1 AA</td><td style="padding:10px 14px;color:var(--mid);">EULA §6, All pages</td><td style="padding:10px 14px;color:var(--mid);">ARIA labels, keyboard nav, contrast, semantics</td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-weight:600;color:var(--blue);">ISO/IEC 25010:2011</td><td style="padding:10px 14px;color:var(--mid);">Warranty Disclaimer §1, EULA §5</td><td style="padding:10px 14px;color:var(--mid);">Liability limitation basis, "as-is" platform</td></tr>
+            <tr style="background:var(--warm);"><td style="padding:10px 14px;font-weight:600;color:var(--blue);">PDPA</td><td style="padding:10px 14px;color:var(--mid);">Privacy Policy §1–5, EULA §7, Cookie Banner</td><td style="padding:10px 14px;color:var(--mid);">Data consent, user rights, retention policy</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-legal -->
+
+
+<!-- ═══════════════ CONTACT MODAL (service inquiry) ═══════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h3 id="modal_title"></h3>
+    <p class="modal-sub" id="modal_sub"></p>
+    <p class="modal-cpid" id="modal_cpid"></p>
+    <div class="modal-info">
+      <div class="modal-row"><div class="modal-icon">👤</div><div><strong id="modal_name"></strong><span>Service Provider</span></div></div>
+      <div class="modal-row"><div class="modal-icon">📍</div><div><strong id="modal_loc"></strong><span>Location</span></div></div>
+      <div class="modal-row"><div class="modal-icon">📞</div><div><strong id="modal_contact"></strong><span>Contact</span></div></div>
+      <div class="modal-row"><div class="modal-icon">💰</div><div><strong id="modal_price"></strong><span>Rate</span></div></div>
+      <div class="modal-row"><div class="modal-icon">⭐</div><div><strong id="modal_rating"></strong><span>Community Rating</span></div></div>
+    </div>
+    <div class="modal-pla-note">✅ Provider accepted PLA v1.4 — listing accuracy confirmed. Contact is at your own discretion per EULA §5.</div>
+    <div class="modal-disclaimer">⚠️ <strong>Warranty Disclaimer:</strong> SkillConnect does not guarantee this service. Reference CPID in any support request. <a onclick="goPage('legal');switchTab('warranty');closeModal()" style="color:var(--blue);cursor:pointer;">Read full disclaimer →</a></div>
+    <button class="modal-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════ FOOTER (shown on all pages) ═══════════════ -->
+<footer id="siteFooter">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a class="nav-logo" onclick="goPage('home')"><span style="color:var(--orange-light)">Skill</span>Connect</a>
+      <p>Free local skill exchange. ISO-aligned. EULA-governed. Community-driven.</p>
+      <div class="compliance-badges">
+        <span class="foot-badge">ISO 27001</span><span class="foot-badge">ISO 9001</span><span class="foot-badge">IEEE 2510</span>
+        <span class="foot-badge">WCAG 2.1</span><span class="foot-badge">CPID</span><span class="foot-badge">PDPA</span>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Platform</h4>
+      <a onclick="goPage('home')">Home</a>
+      <a onclick="goPage('browse')">Browse Services</a>
+      <a onclick="goPage('post')">Post a Service</a>
+      <a onclick="goPage('about')">About Us</a>
+    </div>
+    <div class="footer-links">
+      <h4>Support</h4>
+      <a onclick="goPage('faq')">FAQ</a>
+      <a onclick="goPage('contact')">Contact Us</a>
+      <a onclick="goPage('contact')">Report a Listing</a>
+      <a onclick="goPage('contact')">Data Removal</a>
+    </div>
+    <div class="footer-links">
+      <h4>Legal Documents</h4>
+      <a onclick="goPage('legal');switchTab('eula')">EULA v2.1</a>
+      <a onclick="goPage('legal');switchTab('pla')">PLA v1.4</a>
+      <a onclick="goPage('legal');switchTab('privacy')">Privacy Policy</a>
+      <a onclick="goPage('legal');switchTab('warranty')">Warranty Disclaimer</a>
+    </div>
+    <div class="footer-links">
+      <h4>Standards</h4>
+      <a onclick="goPage('legal');switchTab('cpid')">CPID Framework</a>
+      <a onclick="goPage('legal');switchTab('standards')">ISO / IEEE Mapping</a>
+      <a onclick="goPage('legal')">Compliance Hub</a>
+    </div>
+  </div>
+  <div class="footer-legal-strip">
+    <p class="footer-disclaimer"><strong>Warranty &amp; Liability Disclaimer:</strong> SkillConnect is a marketplace facilitator only and provides no warranties on listed services (ISO/IEC 25010:2011). All service engagements are solely between Users and independent Service Providers. Platform use is governed by EULA v2.1 · PLA v1.4 · Privacy Policy v1.2. Data handled per ISO/IEC 27001:2022 &amp; PDPA. All listings are CPID-assigned (SKC-XXXX) for traceability. SkillConnect is a university Professional Practices project — Document Ref: SKC-PLAT-2025.</p>
+    <div class="footer-bottom">
+      <p>© 2025 SkillConnect. Built for <span>local communities</span>.</p>
+      <p>A <span>University Project</span> — Professional Practices | Ref: <span>SKC-PLAT-2025</span></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════ SERVICE DATA ═══════════════════════ */
+const services=[
+  {title:"Math & Science Tutoring",provider:"Ayesha Khan",category:"Tutoring",location:"Gulshan, Karachi",desc:"Experienced tutor for Class 9–12. Home visits available. 5+ years of teaching experience.",contact:"ayesha@email.com",price:"Rs. 500/hr",priceNum:500,badge:"badge-orange",icon:"📚",color:"#fde8d8",tc:"#e8611a",rating:4.9,reviews:47},
+  {title:"Computer Setup & IT Help",provider:"Zain Ahmed",category:"Tech Help",location:"Defence, Lahore",desc:"WiFi setup, software installation, virus removal, laptop repair. Home visits in DHA/Cantt area.",contact:"0312-3456789",price:"Rs. 800/visit",priceNum:800,badge:"badge-blue",icon:"💻",color:"#dbeafe",tc:"#2563eb",rating:4.7,reviews:31},
+  {title:"Guitar & Ukulele Lessons",provider:"Omar Mirza",category:"Music",location:"F-6, Islamabad",desc:"Professional guitarist offering beginner to intermediate lessons. Online sessions also available.",contact:"omar.music@gmail.com",price:"Rs. 1000/hr",priceNum:1000,badge:"badge-purple",icon:"🎵",color:"#ede9fe",tc:"#7c3aed",rating:5.0,reviews:28},
+  {title:"Home Garden Maintenance",provider:"Bilal Hussain",category:"Gardening",location:"Model Town, Lahore",desc:"Plant care, lawn mowing, seasonal planting, garden design. Affordable weekly packages available.",contact:"0322-9876543",price:"Rs. 1500/day",priceNum:1500,badge:"badge-green",icon:"🌿",color:"#e8f5ee",tc:"#3a7c5c",rating:4.8,reviews:19},
+  {title:"House Cleaning Service",provider:"Sana Farooq",category:"Cleaning",location:"PECHS, Karachi",desc:"Deep cleaning, regular home cleaning, office cleaning. Brings her own supplies. Trusted.",contact:"sana.clean@gmail.com",price:"Rs. 1200/session",priceNum:1200,badge:"badge-orange",icon:"🧹",color:"#fde8d8",tc:"#e8611a",rating:4.6,reviews:52},
+  {title:"Plumbing & Small Repairs",provider:"Usman Tariq",category:"Home Repair",location:"G-11, Islamabad",desc:"Tap fixing, pipe leakage, bathroom fittings. Fast response within 2 hours. 10 years experience.",contact:"0301-1122334",price:"Rs. 600 onward",priceNum:600,badge:"badge-blue",icon:"🔧",color:"#dbeafe",tc:"#2563eb",rating:4.5,reviews:63},
+  {title:"Home Cooking Tiffin Service",provider:"Rubina Bibi",category:"Cooking",location:"Saddar, Rawalpindi",desc:"Homemade desi food tiffin for students and working people. Lunch + dinner. Hygienic and tasty.",contact:"rubina.tiffin@gmail.com",price:"Rs. 300/meal",priceNum:300,badge:"badge-green",icon:"🍳",color:"#e8f5ee",tc:"#3a7c5c",rating:4.9,reviews:88},
+  {title:"English Language Tutoring",provider:"Fatima Rizvi",category:"Tutoring",location:"Johar Town, Lahore",desc:"IELTS prep, spoken English, grammar coaching. Online and in-person. Helped 200+ students.",contact:"fatima.english@gmail.com",price:"Rs. 600/hr",priceNum:600,badge:"badge-purple",icon:"📖",color:"#ede9fe",tc:"#7c3aed",rating:4.9,reviews:112},
+];
+services.forEach((s,i)=>{ s.cpid='SKC-'+String(1001+i).padStart(4,'0'); });
+
+let activeFilter='All';
+
+/* ═══════════════════════ PAGE NAVIGATION ═══════════════════════ */
+const pages=['home','browse','post','about','faq','contact','legal'];
+function goPage(id){
+  pages.forEach(p=>{
+    const el=document.getElementById('page-'+p);
+    if(el) el.classList.toggle('active',p===id);
+  });
+  document.querySelectorAll('.nav-links a[data-page]').forEach(a=>{
+    a.classList.toggle('active',a.dataset.page===id);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='browse') renderCards(services);
+  if(id==='legal') buildCPIDTable();
+  closeMenu();
+}
+
+/* ═══════════════════════ RENDER CARDS ═══════════════════════ */
+function renderCards(list){
+  const grid=document.getElementById('servicesGrid');
+  const noRes=document.getElementById('noResults');
+  const count=document.getElementById('resultsCount');
+  grid.innerHTML='';
+  if(!list||list.length===0){noRes.style.display='block';count.textContent='';return;}
+  noRes.style.display='none';
+  count.textContent=list.length+' service'+(list.length!==1?'s':'')+' found';
+  list.forEach((s,i)=>{
+    const stars='★'.repeat(Math.round(s.rating||0))+'☆'.repeat(5-Math.round(s.rating||0));
+    const card=document.createElement('div');
+    card.className='service-card';
+    card.setAttribute('role','listitem');
+    card.setAttribute('tabindex','0');
+    card.innerHTML=`
+      <div class="card-cpid">${s.cpid}</div>
+      <div class="card-top">
+        <div class="card-avatar" style="background:${s.color};color:${s.tc};">${s.icon}</div>
+        <span class="card-badge ${s.badge}">${s.category}</span>
+      </div>
+      <div class="card-title">${s.title}</div>
+      <div class="card-provider">👤 ${s.provider}</div>
+      <div class="card-rating"><span class="stars-s">${stars}</span><span class="rating-v">${s.rating||'New'} ${s.reviews?'('+s.reviews+')':''}</span></div>
+      <div class="card-desc">${s.desc}</div>
+      <div class="card-pla-tag">✅ PLA-Accepted · EULA Governed</div>
+      <div class="card-footer">
+        <div><div class="card-loc">📍 ${s.location}</div><div class="card-price">${s.price}</div></div>
+        <button class="card-contact" onclick="openModal(${services.indexOf(s)})">Contact →</button>
+      </div>`;
+    card.addEventListener('keydown',e=>{if(e.key==='Enter')openModal(services.indexOf(s));});
+    grid.appendChild(card);
+    setTimeout(()=>card.classList.add('visible'),i*65);
+  });
+  const lc=document.getElementById('liveCount');
+  if(lc) lc.textContent=services.length;
+}
+
+function filterChip(el,cat){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); activeFilter=cat; applyFilters();
+}
+function filterCategory(cat){
+  activeFilter=cat;
+  document.querySelectorAll('#filterChips .chip').forEach(c=>{
+    c.classList.toggle('active',c.textContent.trim().includes(cat)||(cat==='All'&&c.textContent.trim()==='All'));
+  });
+  applyFilters();
+}
+function applyFilters(){
+  const q=(document.getElementById('searchInput')||{}).value||'';
+  const ql=q.toLowerCase().trim();
+  const priceF=(document.getElementById('priceFilter')||{}).value||'';
+  const sortF=(document.getElementById('sortFilter')||{}).value||'';
+  let list=services.filter(s=>{
+    const mc=activeFilter==='All'||s.category===activeFilter;
+    const mq=!ql||s.title.toLowerCase().includes(ql)||s.location.toLowerCase().includes(ql)||s.provider.toLowerCase().includes(ql)||s.desc.toLowerCase().includes(ql);
+    let mp=true;
+    if(priceF==='free') mp=s.price.toLowerCase().includes('free');
+    else if(priceF==='low') mp=s.priceNum<600;
+    else if(priceF==='mid') mp=s.priceNum>=600&&s.priceNum<=1000;
+    else if(priceF==='high') mp=s.priceNum>1000;
+    return mc&&mq&&mp;
+  });
+  if(sortF==='rating') list=[...list].sort((a,b)=>(b.rating||0)-(a.rating||0));
+  else if(sortF==='price_asc') list=[...list].sort((a,b)=>a.priceNum-b.priceNum);
+  else if(sortF==='price_desc') list=[...list].sort((a,b)=>b.priceNum-a.priceNum);
+  renderCards(list);
+}
+function clearFilters(){
+  activeFilter='All';
+  document.querySelectorAll('#filterChips .chip').forEach((c,i)=>c.classList.toggle('active',i===0));
+  document.getElementById('searchInput').value='';
+  document.getElementById('priceFilter').value='';
+  document.getElementById('sortFilter').value='';
+  renderCards(services);
+}
+
+/* ═══════════════════════ MODAL ═══════════════════════ */
+function openModal(i){
+  const s=services[i];
+  document.getElementById('modal_title').textContent=s.title;
+  document.getElementById('modal_sub').textContent=s.category+' · '+s.location;
+  document.getElementById('modal_cpid').textContent='CPID: '+s.cpid+' · PLA v1.4 Accepted';
+  document.getElementById('modal_name').textContent=s.provider;
+  document.getElementById('modal_loc').textContent=s.location;
+  document.getElementById('modal_contact').textContent=s.contact;
+  document.getElementById('modal_price').textContent=s.price;
+  const stars='★'.repeat(Math.round(s.rating||0))+'☆'.repeat(5-Math.round(s.rating||0));
+  document.getElementById('modal_rating').textContent=s.rating?stars+' '+s.rating+' ('+s.reviews+' reviews)':'New listing';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(e){
+  if(!e||e.target===document.getElementById('modalOverlay'))
+    document.getElementById('modalOverlay').classList.remove('open');
+}
+
+/* ═══════════════════════ FORM ═══════════════════════ */
+function checkFormReady(){
+  document.getElementById('formSubmitBtn').classList.toggle('ready',document.getElementById('f_pla').checked);
+}
+function validateField(id){
+  const el=document.getElementById(id);
+  const v=el.tagName==='SELECT'?el.value!=='':el.value.trim()!=='';
+  el.classList.toggle('err',!v); return v;
+}
+function submitForm(){
+  const fields=['f_name','f_contact','f_title','f_cat','f_loc','f_desc'];
+  if(!fields.map(validateField).every(Boolean)){showToast('Please fill in all required fields');return;}
+  const n=document.getElementById('f_name').value.trim();
+  const newCPID='SKC-'+String(1000+services.length+1).padStart(4,'0');
+  services.unshift({
+    title:document.getElementById('f_title').value.trim(),
+    provider:n,category:document.getElementById('f_cat').value,
+    location:document.getElementById('f_loc').value.trim(),
+    desc:document.getElementById('f_desc').value.trim(),
+    contact:document.getElementById('f_contact').value.trim(),
+    price:document.getElementById('f_price').value.trim()||'Negotiable',
+    priceNum:0,badge:'badge-orange',icon:'🌟',color:'#fde8d8',tc:'#e8611a',
+    rating:null,reviews:0,cpid:newCPID
+  });
+  document.getElementById('serviceForm').style.display='none';
+  document.getElementById('cpidDisplay').textContent='🏷️ Your CPID: '+newCPID+' — '+document.getElementById('f_title').value.trim();
+  document.getElementById('formSuccess').style.display='block';
+  showToast('✅ Service posted! CPID: '+newCPID);
+}
+function resetForm(){
+  document.getElementById('serviceForm').style.display='grid';
+  document.getElementById('formSuccess').style.display='none';
+  ['f_name','f_contact','f_title','f_loc','f_price','f_desc'].forEach(id=>{
+    const el=document.getElementById(id); el.value=''; el.classList.remove('err');
+  });
+  document.getElementById('f_cat').value='';
+  document.getElementById('f_pla').checked=false;
+  document.getElementById('formSubmitBtn').classList.remove('ready');
+}
+
+/* ═══════════════════════ FAQ DATA ═══════════════════════ */
+const faqs=[
+  {q:"Is SkillConnect free to use?",a:"Yes, 100% free. There are no fees to list a service, no commission on earnings, and no subscription charges. SkillConnect is a community platform built for accessibility.",cat:"general"},
+  {q:"How do I post a service?",a:"Click 'Post a Service' in the navigation. Fill in your details, accept the Platform Listing Agreement (PLA v1.4), and your service will go live instantly with a unique CPID assigned.",cat:"posting"},
+  {q:"What is a CPID?",a:"CPID stands for Consumer Product Identification code (format: SKC-XXXX). Every listing gets a unique, permanent CPID for traceability, accountability, and dispute resolution. See the CPID Framework in the Legal Hub for full details.",cat:"cpid"},
+  {q:"What is the EULA?",a:"The End User License Agreement (EULA v2.1) governs your use of the SkillConnect platform. It covers your rights, restrictions, data handling, warranties, and liability. You're not blocked from the site — it's accessible in the Legal Hub anytime.",cat:"legal"},
+  {q:"What is the PLA?",a:"The Platform Listing Agreement (PLA v1.4) is specifically for service providers. By posting a service, you agree that your listing is accurate, lawful, and complies with the PLA's standards. It's available to read before you check the acceptance box.",cat:"legal"},
+  {q:"Does SkillConnect guarantee service quality?",a:"No. SkillConnect is a marketplace facilitator only. We do not guarantee the quality, safety, or outcome of any service. See the Warranty & Guarantee Disclaimer in the Legal Hub. We strongly encourage users to verify provider credentials independently.",cat:"legal"},
+  {q:"What does ISO/IEC 27001 mean for my data?",a:"ISO/IEC 27001:2022 is an international information security standard. Aligning with it means we follow best practices for data minimisation, access controls, and user privacy. We do not sell your data and handle it per our Privacy Policy.",cat:"privacy"},
+  {q:"How can I report a fraudulent listing?",a:"Email report@skillconnect.pk with the CPID of the listing (visible on the listing card, format: SKC-XXXX). Include a description of the issue. We aim to review reports within 48 hours.",cat:"general"},
+  {q:"Can I remove my listing?",a:"Yes. Email support@skillconnect.pk with your name and CPID. We will remove your listing and delete your data within 30 days, per our Privacy Policy and PDPA rights.",cat:"posting"},
+  {q:"Why do you need my contact info?",a:"Your contact information (email or phone) is displayed publicly on your listing so potential clients can reach you directly. It is not used for marketing. See Privacy Policy §1 for full details on what we collect and why.",cat:"privacy"},
+  {q:"What standards does SkillConnect follow?",a:"We align with: ISO/IEC 27001:2022 (data security), ISO 9001:2015 (quality), IEEE 2510-2018 (platform standards), WCAG 2.1 AA (accessibility), ISO/IEC 25010:2011 (software quality), and PDPA (data protection law). Full mapping is in the Legal Hub → ISO/IEEE Standards tab.",cat:"legal"},
+  {q:"What do I do if a provider doesn't show up or is unprofessional?",a:"First, try to resolve directly with the provider. If that fails, email report@skillconnect.pk referencing the CPID. While SkillConnect cannot guarantee service outcomes (see Warranty Disclaimer), we will investigate and may remove the listing.",cat:"general"},
+];
+let faqActiveCat='all';
+function buildFAQ(list){
+  const container=document.getElementById('faqItems');
+  container.innerHTML='';
+  if(!list.length){container.innerHTML='<p style="text-align:center;color:var(--mid);padding:30px;">No questions match your search.</p>';return;}
+  list.forEach((f,i)=>{
+    const item=document.createElement('div');
+    item.className='faq-item';
+    const tagLabel={general:'General',legal:'Legal',posting:'Posting',cpid:'CPID',privacy:'Privacy'}[f.cat]||f.cat;
+    item.innerHTML=`<div class="faq-q" onclick="toggleFAQ(this)"><span>${f.q}<span class="faq-tag">${tagLabel}</span></span><span class="faq-arrow">▼</span></div><div class="faq-a">${f.a}</div>`;
+    container.appendChild(item);
+  });
+}
+function toggleFAQ(el){
+  const a=el.nextElementSibling;
+  el.classList.toggle('open'); a.classList.toggle('open');
+}
+function filterFAQ(){
+  const q=(document.getElementById('faqSearch').value||'').toLowerCase();
+  const list=faqs.filter(f=>(faqActiveCat==='all'||f.cat===faqActiveCat)&&(!q||f.q.toLowerCase().includes(q)||f.a.toLowerCase().includes(q)));
+  buildFAQ(list);
+}
+function filterFAQCat(el,cat){
+  document.querySelectorAll('#faqCats .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); faqActiveCat=cat; filterFAQ();
+}
+
+/* ═══════════════════════ CONTACT FORM ═══════════════════════ */
+function submitContact(){
+  const name=document.getElementById('cf_name').value.trim();
+  const email=document.getElementById('cf_email').value.trim();
+  const subject=document.getElementById('cf_subject').value;
+  const msg=document.getElementById('cf_msg').value.trim();
+  if(!name||!email||!subject||!msg){showToast('Please fill in all required fields');return;}
+  showToast('✅ Message sent! We\'ll respond within 1–2 business days.');
+  ['cf_name','cf_email','cf_cpid','cf_msg'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cf_subject').value='';
+}
+
+/* ═══════════════════════ LEGAL TABS ═══════════════════════ */
+function switchTab(id){
+  document.querySelectorAll('.legal-tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('active'));
+  const tab=document.getElementById('tab-'+id);
+  const btn=document.querySelector(`.ltab[onclick="switchTab('${id}')"]`);
+  if(tab) tab.classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+/* ═══════════════════════ CPID TABLE ═══════════════════════ */
+function buildCPIDTable(){
+  const tbody=document.getElementById('cpidTable');
+  if(!tbody) return;
+  tbody.innerHTML='';
+  services.forEach((s,i)=>{
+    const tr=document.createElement('tr');
+    tr.style.cssText='border-bottom:1px solid var(--border);'+(i%2?'background:var(--warm);':'');
+    tr.innerHTML=`<td style="padding:9px 14px;font-weight:700;color:var(--blue);font-family:monospace;">${s.cpid}</td><td style="padding:9px 14px;">${s.title}</td><td style="padding:9px 14px;">${s.provider}</td><td style="padding:9px 14px;">${s.category}</td><td style="padding:9px 14px;"><span style="background:#e8f5ee;color:#3a7c5c;padding:3px 8px;border-radius:5px;font-size:0.7rem;font-weight:700;">Active</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ═══════════════════════ COOKIES ═══════════════════════ */
+function acceptCookies(type){
+  document.getElementById('cookieBanner').style.transform='translateY(100%)';
+  setTimeout(()=>document.getElementById('cookieBanner').style.display='none',400);
+  showToast(type==='all'?'Cookie preferences saved (All)':'Cookie preferences saved (Essential only)');
+  localStorage.setItem('sc_cookies',type);
+}
+
+/* ═══════════════════════ DARK MODE ═══════════════════════ */
+function toggleDark(){
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',isDark?'':'dark');
+  document.querySelector('.icon-btn').textContent=isDark?'🌙':'☀️';
+}
+
+/* ═══════════════════════ MOBILE MENU ═══════════════════════ */
+function toggleMenu(){
+  const m=document.getElementById('mobileMenu'),b=document.getElementById('hamburger');
+  const open=m.classList.toggle('open');
+  b.classList.toggle('open',open); b.setAttribute('aria-expanded',open);
+}
+function closeMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+/* ═══════════════════════ TOAST ═══════════════════════ */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+/* ═══════════════════════ SCROLL REVEAL ═══════════════════════ */
+const revealObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+/* ═══════════════════════ KEYBOARD ESC ═══════════════════════ */
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+/* ═══════════════════════ INIT ═══════════════════════ */
+buildFAQ(faqs);
+// Show cookie banner after 1s if not previously accepted
+setTimeout(()=>{
+  if(!localStorage.getItem('sc_cookies'))
+    document.getElementById('cookieBanner').classList.add('show');
+},1000);
+</script>
+</body>
+</html>
